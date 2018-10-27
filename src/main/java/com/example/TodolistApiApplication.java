@@ -1,4 +1,4 @@
-package com.example.todolistapi;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TodolistApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TodolistApiApplication.class, args);
-	}
+    public static void main(final String[] args) {
+        SpringApplication.run(TodolistApiApplication.class, args);
+    }
 }
