@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:11.0
+    environment:
+      - POSTGRES_USER=example
+      - PGDATA=/database
+
+  api:
+    image: team-cerezo/todolist-api:1.0.0
+    links: [db]
+    depends_on: [db]
+    ports: ["8080:8080"]
+    environment:
+        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/example
+        - SPRING_DATASOURCE_USERNAME=example
+        - SPRING_DATASOURCE_PASSWORD=example
+        - DOMA_DIALECT=postgres
