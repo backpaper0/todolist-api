@@ -1,3 +1,3 @@
 DELETE FROM Todo
-WHERE done = /* done */1
+WHERE done = /* done */TRUE
 
