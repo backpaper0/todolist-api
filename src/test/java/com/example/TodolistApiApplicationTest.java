@@ -3,9 +3,9 @@ package com.example;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,34 +35,31 @@ class TodolistApiApplicationTest {
 
         final TodolistClient client = new TodolistClient(testRestTemplate);
 
-        assertIterableEquals(Collections.emptyList(), client.all());
+        final List<Todo> testData = client.all();
+        final int maxId = testData.stream().map(Todo::getId).max(Integer::compare).orElse(0);
 
-        final Todo entity1 = client.create("foo");
-        assertAll(() -> {
-            assertNotNull(entity1.getId());
-            assertEquals("foo", entity1.getContent());
-            assertEquals(false, entity1.isDone());
-        });
+        //create
+        final Todo entity1 = client.create(maxId + 1, "foo");
+        assertEquals(new Todo(maxId + 1, "foo", false), entity1);
 
-        final Todo entity2 = client.create("bar");
-        final Todo entity3 = client.create("baz");
+        //all
+        final List<Todo> entities1 = Stream.concat(Stream.of(entity1), testData.stream())
+                .collect(Collectors.toList());
+        assertIterableEquals(entities1, client.all());
 
-        assertIterableEquals(Arrays.asList(entity3, entity2, entity1), client.all());
+        //updateDone
+        client.updateDone(entity1.getId(), true);
+        final List<Todo> entities2 = Stream
+                .concat(Stream.of(new Todo(entity1.getId(), entity1.getContent(), true)),
+                        testData.stream())
+                .collect(Collectors.toList());
+        assertIterableEquals(entities2, client.all());
 
-        client.updateDone(entity2.getId(), true);
-        assertIterableEquals(
-                Arrays.asList(
-                        entity3,
-                        new Todo(entity2.getId(), entity2.getContent(), true),
-                        entity1),
-                client.all());
-
+        // deleteDone
         client.deleteDone();
-        assertIterableEquals(
-                Arrays.asList(
-                        entity3,
-                        entity1),
-                client.all());
+        final List<Todo> entities3 = entities2.stream().filter(a -> a.isDone() == false)
+                .collect(Collectors.toList());
+        assertIterableEquals(entities3, client.all());
     }
 
     private static class TodolistClient {
@@ -82,8 +79,9 @@ class TodolistApiApplicationTest {
             return response.getBody();
         }
 
-        Todo create(final String content) {
+        Todo create(final Integer id, final String content) {
             final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+            body.add("id", String.valueOf(id));
             body.add("content", content);
             final RequestEntity<?> request = RequestEntity.post(URI.create("/todolist"))
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -92,7 +90,7 @@ class TodolistApiApplicationTest {
             return response.getBody();
         }
 
-        void updateDone(final Long id, final boolean done) {
+        void updateDone(final Integer id, final boolean done) {
             final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("done", String.valueOf(done));
             final RequestEntity<?> request = RequestEntity.post(URI.create("/todolist/" + id))

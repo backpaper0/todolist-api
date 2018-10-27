@@ -28,14 +28,14 @@ public class TodolistController {
     }
 
     @PostMapping
-    public Todo create(@RequestParam final String content) {
-        final Todo entity = Todo.create(content);
+    public Todo create(@RequestParam final Integer id, @RequestParam final String content) {
+        final Todo entity = Todo.create(id, content);
         return dao.insert(entity).getEntity();
     }
 
     @PostMapping("/{id}")
-    public void updateDone(@PathVariable final Long id, @RequestParam final boolean done) {
-        dao.updateDoneById(done, id);
+    public void updateDone(@PathVariable final Integer id, @RequestParam final boolean done) {
+        dao.updateDoneById(id, done);
     }
 
     @PostMapping("/_delete")

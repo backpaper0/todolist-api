@@ -23,7 +23,7 @@ public interface TodoDao {
     Result<Todo> insert(Todo entity);
 
     @Update(sqlFile = true)
-    int updateDoneById(boolean done, Long id);
+    int updateDoneById(Integer id, boolean done);
 
     @Delete(sqlFile = true)
     int deleteByDone(boolean done);
