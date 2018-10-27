@@ -13,7 +13,7 @@ import com.example.dao.TodoDao;
 import com.example.entity.Todo;
 
 @RestController
-@RequestMapping("/todolist")
+@RequestMapping("/api/todolist")
 public class TodolistController {
 
     private final TodoDao dao;

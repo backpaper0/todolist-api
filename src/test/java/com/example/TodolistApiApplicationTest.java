@@ -71,7 +71,7 @@ class TodolistApiApplicationTest {
         }
 
         List<Todo> all() {
-            final RequestEntity<?> request = RequestEntity.get(URI.create("/todolist"))
+            final RequestEntity<?> request = RequestEntity.get(URI.create("/api/todolist"))
                     .build();
             final ResponseEntity<List<Todo>> response = client.exchange(request,
                     new ParameterizedTypeReference<List<Todo>>() {
@@ -83,7 +83,7 @@ class TodolistApiApplicationTest {
             final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("id", String.valueOf(id));
             body.add("content", content);
-            final RequestEntity<?> request = RequestEntity.post(URI.create("/todolist"))
+            final RequestEntity<?> request = RequestEntity.post(URI.create("/api/todolist"))
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(body);
             final ResponseEntity<Todo> response = client.exchange(request, Todo.class);
@@ -93,14 +93,14 @@ class TodolistApiApplicationTest {
         void updateDone(final Integer id, final boolean done) {
             final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
             body.add("done", String.valueOf(done));
-            final RequestEntity<?> request = RequestEntity.post(URI.create("/todolist/" + id))
+            final RequestEntity<?> request = RequestEntity.post(URI.create("/api/todolist/" + id))
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                     .body(body);
             client.exchange(request, Void.class);
         }
 
         void deleteDone() {
-            final RequestEntity<?> request = RequestEntity.post(URI.create("/todolist/_delete"))
+            final RequestEntity<?> request = RequestEntity.post(URI.create("/api/todolist/_delete"))
                     .build();
             client.exchange(request, Void.class);
         }
