@@ -36,11 +36,12 @@ class TodolistApiApplicationTest {
         final TodolistClient client = new TodolistClient(testRestTemplate);
 
         final List<Todo> testData = client.all();
-        final int maxId = testData.stream().map(Todo::getId).max(Integer::compare).orElse(0);
 
         //create
-        final Todo entity1 = client.create(maxId + 1, "foo");
-        assertEquals(new Todo(maxId + 1, "foo", false), entity1);
+        final Todo entity1 = client.create("foo");
+        assertNotNull(entity1.getId());
+        assertEquals("foo", entity1.getContent());
+        assertEquals(false, entity1.isDone());
 
         //all
         final List<Todo> entities1 = Stream.concat(Stream.of(entity1), testData.stream())
@@ -79,9 +80,8 @@ class TodolistApiApplicationTest {
             return response.getBody();
         }
 
-        Todo create(final Integer id, final String content) {
+        Todo create(final String content) {
             final MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("id", String.valueOf(id));
             body.add("content", content);
             final RequestEntity<?> request = RequestEntity.post(URI.create("/api/todolist"))
                     .contentType(MediaType.APPLICATION_FORM_URLENCODED)

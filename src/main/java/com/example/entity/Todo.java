@@ -3,12 +3,15 @@ package com.example.entity;
 import java.util.Objects;
 
 import org.seasar.doma.Entity;
+import org.seasar.doma.GeneratedValue;
+import org.seasar.doma.GenerationType;
 import org.seasar.doma.Id;
 
 @Entity(immutable = true)
 public final class Todo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Integer id;
     private final String content;
     private final boolean done;
@@ -47,7 +50,7 @@ public final class Todo {
         return id.equals(other.id) && content.equals(other.content) && done == other.done;
     }
 
-    public static Todo create(final Integer id, final String content) {
-        return new Todo(id, content, false);
+    public static Todo create(final String content) {
+        return new Todo(null, content, false);
     }
 }

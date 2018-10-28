@@ -28,8 +28,8 @@ public class TodolistController {
     }
 
     @PostMapping
-    public Todo create(@RequestParam final Integer id, @RequestParam final String content) {
-        final Todo entity = Todo.create(id, content);
+    public Todo create(@RequestParam final String content) {
+        final Todo entity = Todo.create(content);
         return dao.insert(entity).getEntity();
     }
 

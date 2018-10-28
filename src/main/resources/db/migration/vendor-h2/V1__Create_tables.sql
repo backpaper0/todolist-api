@@ -1,0 +1,5 @@
+CREATE TABLE Todo (
+    id IDENTITY,
+    content VARCHAR(1000) NOT NULL,
+    done BOOLEAN NOT NULL DEFAULT (FALSE)
+);
