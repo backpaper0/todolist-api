@@ -1,0 +1,21 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: 3.6.0-jdk-11
+
+inputs:
+  - name: src
+
+caches:
+  - path: m2
+
+run:
+  path: bash
+  args:
+    - -c
+    - |-
+      set -eu
+      mvn -e -f `pwd`/src/pom.xml -Dmaven.repo.local=`pwd`/m2 test
